@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+tput smcup
+read -r rows cols <<< "$(stty size)"
+printf '\e[H'
+printf '\e7'
+printf "\e[%s;1H" "$rows"
+for ((i=0; i<cols; i++)); do
+    printf "-"
+done
+printf '\e8'
+i=0
+j=0
+for ((;i<rows;i++)); do
+    j=0
+    if ((((i<<2) % 7) == 2)); then
+        printf '\e[34m@'
+    fi
+    for ((;j<cols-1;j++)); do
+        if (((((3>>j)+i) % 2) == 1)); then
+            printf '\e[33m#'
+        fi
+    done
+done
+printf '\e[0m'
+
+read -r inp
+if [ "$inp" == "q" ]; then
+    echo "exited"
+fi
+tput rmcup
+
